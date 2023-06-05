@@ -1,0 +1,275 @@
+openapi: 3.0.0
+info:
+  title: ParkLand API
+  description: ParkLand Demo API by diahhnov
+  version: 1.0.0
+
+servers:
+  - url: http://parklandapi.swagger.io/api/v3
+  - url: https://parkapi.swagger.io/api/v3
+
+tags:
+  - name: AUTH
+  - name: TICKET
+  - name: RIDE
+  - name: SERVICES
+
+paths:
+  /register:
+    post:
+      tags:
+        - AUTH
+      description: add a new account
+      requestBody:
+        description: Create a new account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "400":
+          description: Email Already Exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "405":
+          description: Invalid input
+        "500":
+          description: Internal Service Error
+
+  /login:
+    post:
+      tags:
+        - AUTH
+      description: Login Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Email or Password Are Wrong
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "405":
+          description: Invalid input
+        "500":
+          description: Internal Service Error
+
+    get:
+      tags:
+        - AUTH
+      summary: Logs user into the system
+      parameters:
+        - name: email
+          in: query
+          description: The user name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: Invalid username/password
+
+  /user/logout:
+    post:
+      tags:
+        - AUTH
+      summary: Logs out current logged in user session
+      responses:
+        "200":
+          description: success logout
+        "401":
+          description: Failed to logout, user not authenticated
+
+  /user/{id}:
+    get:
+      tags:
+        - AUTH
+      description: get user by id
+      parameters:
+        - name: id
+          in: path
+          description: "The id that needs to be fetched"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "400":
+          description: Invalid username
+        "500":
+          description: Internal Service Error
+
+    put:
+      tags:
+        - AUTH
+      description: Update User
+      parameters:
+        - name: id
+          in: path
+          description: id that need to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+        required: true
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "405":
+          description: Invalid input
+        "500":
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - AUTH
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+        "500":
+          description: Internal Server Error
+
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Nama pengguna
+          example: johnDoe123
+        firstName:
+          type: string
+          example: john
+        lastName:
+          type: string
+          example: doe
+        phone:
+          type: string
+          example: "8766785"
+        email:
+          type: string
+          example: johndoe@example.com
+        password:
+          type: string
+          format: password
+          description: Kata sandi
+          example: 123456
+      required:
+        - username
+        - email
+        - password
+
+    RegisterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID pengguna
+        username:
+          type: string
+          description: Nama pengguna
+          example: johnDoe123
+        firstName:
+          type: string
+          example: john
+        lastName:
+          type: string
+          example: doe
+        phone:
+          type: string
+          example: "8766785"
+        email:
+          type: string
+          example: johndoe@example.com
+        password:
+          type: string
+          format: password
+          description: Kata sandi
+          example: qwerty123
+      required:
+        - username
+        - email
+        - password
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Nama pengguna
+          example: johnDoe123
+        email:
+          type: string
+          example: johndoe@example.com
+        password:
+          type: string
+          format: password
+          description: Kata sandi
+          example: qwerty123
+      required:
+        - email
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token autentikasi
