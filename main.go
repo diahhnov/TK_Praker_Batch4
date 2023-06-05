@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	configs.LoadEnv()
+	// configs.LoadEnv()
 	configs.ConnectDatabase()
 	e := routes.Init()
 	port := os.Getenv("PORT")
