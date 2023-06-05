@@ -1,0 +1,12 @@
+version: 1
+name: app-api
+env: go1.16
+build:
+  steps:
+    - name: Install Dependencies
+      command: go mod download
+    - name: Build
+      command: go build -o ./app
+  artifacts:
+    - name: Binary
+      path: ./app
