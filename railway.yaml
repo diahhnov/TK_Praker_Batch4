@@ -6,7 +6,7 @@ build:
     - name: Install Dependencies
       command: go mod download
     - name: Build
-      command: go build -o ./app
+      command: go build -o ./main
   artifacts:
     - name: Binary
-      path: ./app
+      path: ./main
