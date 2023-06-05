@@ -12,7 +12,7 @@ func main() {
 	e := routes.Init()
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8000"
 	}
 	e.Start(":" + port)
 }
