@@ -3,17 +3,14 @@ package main
 import (
 	"app-api/configs"
 	"app-api/routes"
-	"os"
 )
 
-func main() {
+func init() {
 	configs.LoadEnv()
 	configs.ConnectDatabase()
-	e := routes.Init()
+}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8000"
-	}
-	e.Start(":" + port)
+func main() {
+	e := routes.Init()
+	e.Start(":8000")
 }
