@@ -12,37 +12,21 @@ import (
 
 var DB *gorm.DB
 
-func LoadEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("gagal load file")
-	}
-}
-
-type DBConfig struct {
-	Username string
-	Password string
-	Host     string
-	Port     string
-	Name     string
-}
-
 func ConnectDatabase() {
 	LoadEnv()
-	var dbConfig DBConfig = DBConfig{
-		Username: os.Getenv("DB_USERNAME"),
-		Password: os.Getenv("DB_PASSWORD"),
-		Host:     os.Getenv("DB_HOST"),
-		Port:     os.Getenv("DB_PORT"),
-		Name:     os.Getenv("DB_NAME"),
-	}
+
+	dbUsername := os.Getenv("DB_USERNAME")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbConfig.Username,
-		dbConfig.Password,
-		dbConfig.Host,
-		dbConfig.Port,
-		dbConfig.Name)
+		dbUsername,
+		dbPassword,
+		dbHost,
+		dbPort,
+		dbName)
 
 	var err error
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -50,6 +34,13 @@ func ConnectDatabase() {
 		panic("Database Error")
 	}
 	migration()
+}
+
+func LoadEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		panic("gagal load file")
+	}
 }
 
 func migration() {
