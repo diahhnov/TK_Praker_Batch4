@@ -28,6 +28,7 @@ type DBConfig struct {
 }
 
 func ConnectDatabase() {
+	LoadEnv()
 	var dbConfig DBConfig = DBConfig{
 		Username: os.Getenv("DB_USERNAME"),
 		Password: os.Getenv("DB_PASSWORD"),
