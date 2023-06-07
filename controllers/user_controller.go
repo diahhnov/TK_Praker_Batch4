@@ -37,7 +37,7 @@ func GetUserController(c echo.Context) error {
 	result := configs.DB.Find(&users)
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, models.BaseResponse{
-			Status: false, Message: "Gagal get data user dari database", Data: nil,
+			Message: "Gagal get data user dari database", Data: nil,
 		})
 	}
 
