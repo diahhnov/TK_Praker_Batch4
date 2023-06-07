@@ -10,10 +10,11 @@ import (
 func Init() *echo.Echo {
 	e := echo.New()
 	e.Pre(middleware.RemoveTrailingSlash())
-	e.POST("/register", controllers.InsertUserController)
+	e.POST("/users", controllers.InsertUserController)
 	e.GET("/users", controllers.GetUserController)
 	e.GET("/user/:id", controllers.GetUserByIDController)
 	e.PUT("/user/:id", controllers.UpdateUserByIDContoller)
 	e.DELETE("/user/:id", controllers.DeleteUserByIDController)
+	e.Use(middleware.Logger())
 	return e
 }

@@ -14,7 +14,14 @@ func InsertUserController(c echo.Context) error {
 	var userInput models.Users
 	c.Bind(&userInput)
 
-	result := configs.DB.Create(&userInput)
+	result := configs.DB.First(&models.Users{}, "email = ?", userInput.Email)
+	if result.Error != gorm.ErrRecordNotFound {
+		return c.JSON(http.StatusConflict, models.BaseResponse{
+			Message: "Email telah ada", Data: nil,
+		})
+	}
+
+	result = configs.DB.Create(&userInput)
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, nil)
 	}
@@ -29,7 +36,9 @@ func GetUserController(c echo.Context) error {
 	var users []models.Users
 	result := configs.DB.Find(&users)
 	if result.Error != nil {
-		return c.JSON(http.StatusInternalServerError, nil)
+		return c.JSON(http.StatusInternalServerError, models.BaseResponse{
+			Status: false, Message: "Gagal get data user dari database", Data: nil,
+		})
 	}
 
 	return c.JSON(http.StatusOK, models.BaseResponse{
